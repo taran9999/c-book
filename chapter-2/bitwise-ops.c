@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 unsigned getbits(unsigned x, int p, int n);
-void setbits(unsigned x, int p, int n, unsigned y);
+unsigned setbits(unsigned x, int p, int n, unsigned y);
 
 int main() {
 
@@ -17,6 +17,6 @@ unsigned getbits(unsigned x, int p, int n) {
 }
 
 //Set n bits from position p of x to the rightmost n bits of y
-void setbits(unsigned x, int p, int n, unsigned y) {
+unsigned setbits(unsigned x, int p, int n, unsigned y) {
     return (x & (~(~(~0 << n)) << (p + 1 - n))) | ((y & (~(~0 << n))) << (p + 1 - n));
 }
