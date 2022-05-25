@@ -18,5 +18,12 @@ unsigned getbits(unsigned x, int p, int n) {
 
 //Set n bits from position p of x to the rightmost n bits of y
 unsigned setbits(unsigned x, int p, int n, unsigned y) {
-    return (x & (~(~(~0 << n)) << (p + 1 - n))) | ((y & (~(~0 << n))) << (p + 1 - n));
+    /* Strategy:
+    Get rightmost n bits of y by masking with ~(~0 << n)
+    Turn off n bits at position p in x by masking with ~((~(~0 << n)) << (p + 1 - n)) (mask looks like 11100011, n zeroes at position p)
+    Left shift y by (p + 1 - n) to line up with off bits of x
+    x | y results in structure similar to xxxyyyxx
+    */
+
+    return (x & (~((~(~0 << n)) << (p + 1 - n)))) | ((y & (~(~0 << n))) << (p + 1 - n));
 }
