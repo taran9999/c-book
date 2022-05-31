@@ -3,6 +3,7 @@
 unsigned getbits(unsigned x, int p, int n);
 unsigned setbits(unsigned x, int p, int n, unsigned y);
 unsigned invert(unsigned x, int p, int n);
+unsigned rightrot(unsigned x, int n);
 
 int main() {
 
@@ -38,4 +39,29 @@ unsigned invert(unsigned x, int p, int n) {
     XOR x with mask
     */
    return x ^ ((~(~0 << n)) << (p + 1 - n));
+}
+
+//Rotate x to the right by n positions
+unsigned rightrot(unsigned x, int n) {
+    //Determine word length on machine
+
+    unsigned y = (unsigned)~0;
+    //Right shift until value of y = 0, so that there are no 1 bits left. Length determined by incrementing after removing each 1 bit.
+    int length;
+    for(length = 1; (y = y >> 1) != 0; length++);
+
+    /*
+    Get rightmost bit of x by masking with ~(~0 << 1), store into variable rbit
+    Right shift x by 1
+    Left shift rbit by length - 1 to move it to the leftmost position
+    Note | with 0 leaves bits unchanged. x | rbit places rbit in the leftmost position
+    Repeat process n times
+    */
+   int rbit;
+   for(int i = 0; i < n; i++) {
+       rbit = (x & ~(~0 << 1)) << (length - 1);
+       x = (x >> 1) | rbit;
+   }
+
+   return x;
 }
