@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h> //for atof()
 #include <ctype.h> //used for getop
+#include <math.h> //for fmod
 
 #define MAXOP 100 //max size of operand or operator
 #define NUMBER '0' //signal that a number was found
@@ -46,6 +47,13 @@ int main() {
                     printf("error: division by zero");
                 }
                 break;
+            case '%':
+                op2 = pop();
+                if(op2 != 0) {
+                    push(fmod(pop(), op2)); //modulus function for doubles
+                } else {
+                    printf("error: division by zero");
+                }
             default:
                 printf("error: unknown command %s\n", s);
         }
@@ -74,7 +82,7 @@ int getop(char s[]) {
     int i, c;
     while((s[0] = c = getch()) == ' ' || c == '\t');
     s[1] = '\0';
-    if(!isdigit(c) && c != '.') {
+    if(!isdigit(c) && c != '.' && c != '-') {
         return c; //c is not a number
     }
     i = 0;
@@ -83,6 +91,16 @@ int getop(char s[]) {
     }
     if(c == '.') { //get decimal part
         while(isdigit(s[++i] = c = getch()));
+    }
+    if(c == '-') {
+        if(isdigit(c = getch()) || c == '.') {
+            s[++i] = c; //negative number
+        } else {
+            if(c != EOF) {
+                ungetch(c);
+            }
+            return '-'; //minus
+        }
     }
     s[i] = '\0';
     if(c != EOF) {
