@@ -54,6 +54,22 @@ int main() {
                 } else {
                     printf("error: division by zero");
                 }
+            case 'v': //view the top element of the stack
+                printf("\t%f\n", val[sp - 1]);
+                break;
+            case 'd': //duplicate the top element of the stack
+                double elem = val[sp - 1];
+                val[sp++] = elem;
+                break;
+            case 's': //swap the top two elements of the stack
+                double val1 = pop();
+                double val2 = pop();
+                push(val1);
+                push(val2);
+                break;
+            case 'c': //clear the stack
+                sp = 0;
+                break;
             default:
                 printf("error: unknown command %s\n", s);
         }
