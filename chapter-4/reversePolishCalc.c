@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h> //for atof()
 #include <ctype.h> //used for getop
-#include <math.h> //for fmod
+#include <math.h> //for fmod + exercise 4-5
+#include <string.h> //for exercise 4-5
 
 #define MAXOP 100 //max size of operand or operator
 #define NUMBER '0' //signal that a number was found
 #define MAXVAL 100 //maximum size of value stack
 #define BUFSIZE 100 //size of buffer for getch and ungetch
+#define NAME 'a' //signal if a string was found
 
 int sp = 0; //next free position in value stack
 double val[MAXVAL]; //value stack
@@ -28,6 +30,20 @@ int main() {
         switch(type) {
             case NUMBER:
                 push(atof(s)); //push number into stack
+                break;
+            case NAME:
+                if(strcmp(s, "sin") == 0) {
+                    push(sin(pop()));
+                } else if(strcmp(s, "cos") == 0) {
+                    push(cos(pop()));
+                } else if(strcmp(s, "exp") == 0) {
+                    push(exp(pop()));
+                } else if(strcmp(s, "pow") == 0) {
+                    op2 = pop();
+                    push(pow(pop(), op2));
+                } else {
+                    printf("error: %s is not a supported function", s);
+                }
                 break;
             case '+':
                 push(pop() + pop()); //add the last two numbers in the stack and push the result
@@ -98,10 +114,22 @@ int getop(char s[]) {
     int i, c;
     while((s[0] = c = getch()) == ' ' || c == '\t');
     s[1] = '\0';
+    i = 0;
+    if(islower(c)) { //check for a lowercase string
+        while(islower(s[++i] = c = getch()));
+        s[i] = '\0';
+        if(c != EOF) {
+            ungetch(c);
+        }
+        if(strlen(s) > 1) {
+            return NAME;
+        } else {
+            return c;
+        }
+    }
     if(!isdigit(c) && c != '.' && c != '-') {
         return c; //c is not a number
     }
-    i = 0;
     if(isdigit(c)) { //get integer part of operand
         while(isdigit(s[++i] = c = getch()));
     }
